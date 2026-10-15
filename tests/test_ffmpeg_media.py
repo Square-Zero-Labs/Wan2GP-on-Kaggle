@@ -1,4 +1,12 @@
-"""Real Wan2GP decodes; opt in with WAN2GP_SOURCE and FFMPEG_TEST_BINARIES."""
+"""Local media tests require NumPy, CPU PyTorch, FFmpeg/ffprobe, and a Wan2GP checkout.
+
+From the repository root:
+    WAN2GP_SOURCE=/path/to/Wan2GP FFMPEG_TEST_BINARIES=/old/ffmpeg:/usr/bin/ffmpeg \
+        python -m unittest discover -s tests -v
+
+Validated with upstream af2ed29a83dbccc7f1c0571a73005648436b392e.
+Without WAN2GP_SOURCE, the media tests are skipped; setup regression tests still run.
+"""
 import contextlib
 import importlib
 import io

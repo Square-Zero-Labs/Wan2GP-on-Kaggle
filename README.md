@@ -30,7 +30,6 @@ Keep the final launch cell running while using the UI. Stopping that cell stops 
 
 ## Notes
 
-* Step 6 probes the FFmpeg binary selected by Wan2GP (`FFMPEG_BINARY`, bundled binary, then `PATH`). Builds without `-fps_mode` use the equivalent `-vsync 0` only in the rawvideo decoder commands; builds with `-fps_mode` keep the upstream source. Rerun Step 6 after updating Wan2GP. No FFmpeg upgrade is required.
 * Step 5 writes a constraints file pinning Kaggle's detected `torch`, `torchvision`, and `torchaudio` versions before installing Wan2GP requirements.
 * Dependency installs use `--no-cache-dir`, and model/runtime caches are pointed at `/kaggle/temp` to reduce disk pressure.
 * If GPU options are grayed out, check Kaggle phone verification and GPU quota.
@@ -39,32 +38,3 @@ Keep the final launch cell running while using the UI. Stopping that cell stops 
 ## Contributing
 
 Issues and pull requests are welcome.
-
-### Compatibility tests
-
-Run the notebook setup regression tests with the Python standard library:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-For real media coverage, install NumPy and CPU PyTorch in a test environment and
-point `WAN2GP_SOURCE` at an upstream Wan2GP checkout. The CI workflow pins upstream
-revision `af2ed29a83dbccc7f1c0571a73005648436b392e` and runs on Ubuntu 22.04 and
-24.04 with their system FFmpeg packages. The notebook itself continues to use the
-Wan2GP revision downloaded in Step 3.
-
-```bash
-WAN2GP_SOURCE=/path/to/Wan2GP \
-FFMPEG_TEST_BINARIES=/path/to/older/ffmpeg:/usr/bin/ffmpeg \
-python -m unittest discover -s tests -v
-```
-
-The media tests execute the notebook compatibility cell and actual upstream decoder
-functions against generated lossless MP4s. They cover contiguous decoding, seeking,
-frame limits, sparse ordering and duplicates, resampling, variable timestamps,
-virtual clips, and pixel aspect correction. They also compare passthrough timestamps
-and frame hashes. Without `WAN2GP_SOURCE`, media tests are explicitly skipped.
-A local run reproduced the original error on FFmpeg 4.2.2 and passed the compatibility
-suite on 4.2.2 and 7.1.5. Kaggle images change; the runtime capability probe, rather
-than a hardcoded version threshold, chooses the compatibility path.
